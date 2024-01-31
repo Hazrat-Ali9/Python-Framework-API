@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Item</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.6.1/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div class="container mt-4 mx-auto px-96">
+        <h2 class='text-white'>Product Search</h2>
+        <form id="searchForm">
+          <div class="form-group">
+            <input
+              type="text"
+              class="placeholder-white px-6 py-2 text-gray-700 placeholder-gray-500 bg-white outline-none dark:bg-gray-800 dark:placeholder-gray-400 focus:placeholder-transparent dark:focus:placeholder-transparent"
+              id="searchTerm"
+              name="searchTerm"
+              placeholder="Enter search term"
+            />
+          </div>
+          <button type="submit" class="px-4 py-3 text-sm font-medium tracking-wider text-gray-100 uppercase transition-colors duration-300 transform bg-gray-700 rounded-md hover:bg-gray-600 focus:bg-gray-600 focus:outline-none">Search</button>
+        </form>
+    
+        <div id="searchResults" class="mt-4">
+          <!-- Search results will be displayed here -->
+        </div>
+      </div>
+      <section class="flex flex-col items-center bg-black">
+        
+        <div id="data-container" class="mt-10 grid max-w-md grid-cols-1 gap-6 px-2 sm:max-w-lg sm:px-20 md:max-w-screen-xl md:grid-cols-2 md:px-10 lg:grid-cols-3 lg:gap-8">
+         
+        </div>
+      </section>
+
+
+      <script src="https://cdn.jsdelivr.net/npm/tw-elements/dist/js/tw-elements.umd.min.js"></script>
+    <script>
+      let allItemsData; // Store all items data globally
+    
+      async function fetchData() {
+        try {
+          const response = await fetch("http://127.0.0.1:8000/api/items/");
+          allItemsData = await response.json();
+    
+          renderItems(allItemsData);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      }
+    
+      function renderItems(data) {
+        const dataContainer = document.getElementById("data-container");
+        dataContainer.innerHTML = ""; // Clear previous data
+    
+        data.forEach((item) => {
+          const imageUrl = "http://127.0.0.1:8000" + item.image;
+          console.log("Image URL:", imageUrl);
+    
+          const itemDiv = document.createElement("div");
+          itemDiv.innerHTML = `
+          <article class="mb-4 overflow-hidden rounded-xl border text-gray-700 shadow-md duration-500 ease-in-out hover:shadow-xl">
+            <div class="">
+              <img src="${imageUrl}" alt="" class="" />
+            </div>
+      
+            <div class="p-4">
+              <div class="pb-6">
+                <a href="#" class="text-2xl text-white hover:text-green-600 font-bold duration-500 ease-in-out">${item.name}</a>
+              </div>
+      
+              <ul class="m-0 flex list-none items-center justify-between px-0 pb-0">
+                
+      
+                <li class="text-left">
+                  <span class="text-sm text-white">Rating</span>
+                  <ul class="m-0 flex items-center p-0 font-medium">
+                    <li class="inline text-yellow-500">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </svg>
+                    </li>
+                    <li class="inline text-yellow-500">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </svg>
+                    </li>
+                    <li class="inline text-yellow-500">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </svg>
+                    </li>
+                    <li class="inline text-yellow-500">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </svg>
+                    </li>
+                    <li class="inline text-yellow-500">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                      </svg>
+                    </li>
+                    <li class="ml-2 inline text-white">5.0(30)</li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </article>
+                    `;
+          dataContainer.appendChild(itemDiv);
+        });
+      }
+    
+      function filterItems(category) {
+        if (category === "All") {
+          renderItems(allItemsData); // Show all items
+        } else {
+          const filteredData = allItemsData.filter(item => item.category === category);
+          renderItems(filteredData);
+        }
+      }
+    
+      fetchData();
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.24.0/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+      // Handle form submission
+      $("#searchForm").submit(function (event) {
+        event.preventDefault();
+        var searchTerm = $("#searchTerm").val().trim();
+
+        // Make GET request to the Django API
+        axios
+          .get("http://127.0.0.1:8000/api/items/search/", {
+            params: {
+              search: searchTerm,
+            },
+          })
+          .then(function (response) {
+            displaySearchResults(response.data);
+          })
+          .catch(function (error) {
+            console.error("Error fetching search results:", error);
+          });
+      });
+
+      // Display search results in the UI
+      function displaySearchResults(results) {
+        var searchResultsDiv = $("#searchResults");
+        searchResultsDiv.empty();
+
+        if (results.length === 0) {
+          searchResultsDiv.append("<p>No results found.</p>");
+        } else {
+          var resultList = $('<ul class="list-group"></ul>');
+          results.forEach(function (result) {
+            resultList.append(
+              '<li class="list-group-item text-white">' + result.name + "</li>"
+            );
+          });
+          searchResultsDiv.append(resultList);
+        }
+      }
+    </script>  
+</body>
+</html>

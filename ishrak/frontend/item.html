@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ishrak</title>
+</head>
+<body>
+    <h1>User Authentication</h1>
+    <div id="message"></div>
+    <div id="user-form">
+        <input type="text" id="username" placeholder="Username"><br>
+        <input type="text" id="email" placeholder="email"><br>
+        <input type="password" id="password" placeholder="Password"><br>
+        <input type="password" id="password2" placeholder="Password"><br>
+        <button onclick="registerUser()">Register</button>
+        <button onclick="loginUser()">Login</button>
+        <button onclick="logoutUser()">Logout</button>
+    </div>
+
+
+    <script>
+        function registerUser() {
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const password2 = document.getElementById('password2').value;
+        
+            fetch('http://127.0.0.1:8000/api/register/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    username: username,
+                    email:email,
+                    password: password,
+                    password2: password2
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('message').innerText = data.success || data.error;
+            });
+        }
+        
+        function loginUser() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+        
+            fetch('http://127.0.0.1:8000/api/login/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    username: username,
+                    password: password
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const messageElement = document.getElementById('message');
+                if (data.success) {
+                    messageElement.innerText = data.success;
+                    // Redirect to home.html
+                    window.location.href = 'http://127.0.0.1:5500/frontend/home.html';
+                } else {
+                    messageElement.innerText = data.error || "Invalid credentials";
+                }
+            })
+            console.log(data)
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+                const messageElement = document.getElementById('message');
+                messageElement.innerText = "An error occurred while logging in. Please try again later.";
+            });
+        }
+        
+        
+        
+        function logoutUser() {
+            fetch('http://127.0.0.1:8000/api/register/', {
+                method: 'POST',
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('message').innerText = data.success;
+            });
+        }
+    </script>
+</body>
+</html>
